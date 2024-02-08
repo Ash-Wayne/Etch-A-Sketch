@@ -1,0 +1,15 @@
+.main-div {
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+body {
+    text-align: center;
+}
+
+button {
+    margin-bottom: 15px;
+}
