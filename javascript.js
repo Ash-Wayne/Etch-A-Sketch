@@ -4,7 +4,10 @@ const chooseSquaresBtn = document.querySelector('button');
 
 h1.textContent = 'Etch-A-Sketch';
 
+
+// paint the page with 16x16 on load
 paintThePage(true, 16);
+
 
 function paintThePage(firstTimePainting, squares) {
     if (!firstTimePainting) {
@@ -24,22 +27,53 @@ function paintThePage(firstTimePainting, squares) {
         squareDiv.style.border = '1px solid black';
         mainDiv.appendChild(squareDiv);
 
-
+        // paint the square progressively darker upon each entry
         squareDiv.addEventListener("mouseenter", (e) => {
-            squareDiv.style.backgroundColor = 'pink';
+            darkenTheSquare(squareDiv);
         });
     }
 }
+
+
+function darkenTheSquare(squareDiv) {
+    let colorR;
+    let colorG;
+    let colorB;
+    let opacity;
+
+    // if square hasn't been painted at all, give it a random color
+    // if it has, reassign the same color
+    if (!squareDiv.style.backgroundColor) {
+        colorR = Math.floor(Math.random()*256);
+        colorG = Math.floor(Math.random()*256);
+        colorB = Math.floor(Math.random()*256);
+        opacity = 0;
+    } else {
+        const rgbValues = squareDiv.style.getPropertyValue('background-color').split(',');
+        colorR = parseInt(rgbValues[0].slice(5));
+        colorG = parseInt(rgbValues[1]);
+        colorB = parseInt(rgbValues[2]);
+        opacity = parseFloat(rgbValues[3]);
+    }
+
+    // darken the square by a little bit
+    if (opacity < 1) opacity = opacity + 0.1;
+
+    squareDiv.style.backgroundColor = `rgba(${colorR},${colorG},${colorB},${opacity})`;
+}
+
 
 // add listener to window resizing and repaint the page
 window.addEventListener("resize", (e) => {
     paintThePage(false, 16);
 });
 
+
+// allow changing number of squares
 chooseSquaresBtn.addEventListener('click', (e) => {
     let squares;
     do {
-        squares = Number(parseInt(prompt('How many squares would you like?','')));
+        squares = parseInt(prompt('How many squares would you like?',''));
         if (squares > 100) alert('100 is the maximum number of squares you can enter');
     } while (squares > 100);
     paintThePage(false, squares);
